@@ -17,6 +17,7 @@ export class ContactForm {
     this.validateIdNumber();
     this.autoPopulateIdRelatedFields();
     await this.attachEvent();
+    await this.callCustomApi_SayHello();
   }
   static async onSave(context: Xrm.Events.EventContext): Promise<void> {
 
@@ -24,6 +25,42 @@ export class ContactForm {
   static async attachEvent(): Promise<void> {
     this.formContext.getAttribute('t365_idnumber').addOnChange(this.validateIdNumber);
     this.formContext.getAttribute('t365_idnumber').addOnChange(this.autoPopulateIdRelatedFields);
+  }
+
+  static async callCustomApi_SayHello(): Promise<void> {
+    var execute_t365_SayHelloAPI_Request = {
+      // Parameters
+      t365_Name: "Tiyani", // Edm.String
+
+      getMetadata: function () {
+        return {
+          boundParameter: null,
+          parameterTypes: {
+            t365_Name: {
+              typeName: "Edm.String",
+              structuralProperty: 1
+            }
+          },
+          operationType: 0,
+          operationName: "t365_SayHelloAPI"
+        };
+      }
+    };
+  Xrm.WebApi.execute(execute_t365_SayHelloAPI_Request).then(
+      function success(response) {
+        if (response.ok) {
+          return response.json();
+        }
+      }
+    ).then(function (responseBody) {
+      var result = responseBody;
+      console.log(result);
+      // Return Type: mscrm.t365_SayHelloAPIResponse
+      // Output Parameters
+      var t356_sayhellotome = result["t356_SayHelloToMe"]; // Edm.String
+    }).catch(function (error) {
+      console.log(error.message);
+    });
   }
 
   static validateIdNumber(): void {
