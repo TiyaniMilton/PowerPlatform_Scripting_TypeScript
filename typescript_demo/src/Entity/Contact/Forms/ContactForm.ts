@@ -1,8 +1,11 @@
 import { FORM_TYPE_CREATE, FORM_TYPE_UPDATE } from "../../../formTypes";
 
+import { WebApiConfig } from "xrm-webapi";
+
 export class ContactForm {
   static formContext: Xrm.FormContext;
   static formType: number;
+  static config = new WebApiConfig("9.2");
 
   static async onLoad(context: Xrm.Events.EventContext): Promise<void> {
     this.formContext = context.getFormContext();
@@ -46,19 +49,21 @@ export class ContactForm {
         };
       }
     };
-  Xrm.WebApi.execute(execute_t365_SayHelloAPI_Request).then(
-      function success(response) {
+
+    execute
+    Xrm.WebApi.execute(execute_t365_SayHelloAPI_Request).then(
+      function success(response: { ok: any; json: () => any; }) {
         if (response.ok) {
           return response.json();
         }
       }
-    ).then(function (responseBody) {
+    ).then(function (responseBody: any) {
       var result = responseBody;
       console.log(result);
       // Return Type: mscrm.t365_SayHelloAPIResponse
       // Output Parameters
       var t356_sayhellotome = result["t356_SayHelloToMe"]; // Edm.String
-    }).catch(function (error) {
+    }).catch(function (error: { message: any; }) {
       console.log(error.message);
     });
   }
